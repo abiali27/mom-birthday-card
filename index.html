@@ -9,6 +9,7 @@
 @media (prefers-color-scheme:dark){:root{--bg:#0b3023;--bg2:#06211a}}
 *{box-sizing:border-box;margin:0}
 html,body{height:100%}
+html{overflow-x:clip}
 body{background:radial-gradient(ellipse at 50% 30%,var(--bg),var(--bg2));font-family:var(--sans);color:var(--ink);overflow:hidden;
 padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);display:grid;place-items:center;min-height:100%}
 .hint{position:absolute;top:calc(env(safe-area-inset-top,0px) + 6vh);left:0;right:0;text-align:center;color:var(--gold);font-family:var(--serif);font-style:italic;font-size:1.25rem;transition:opacity .5s}
