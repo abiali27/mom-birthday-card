@@ -188,6 +188,15 @@ h1{font:italic 600 clamp(1.9rem,8vw,2.5rem)/1.05 var(--serif);color:var(--red);m
 .msg .fin{transition:none}
 .msg .letter{animation:jump 1.3s cubic-bezier(.3,1,.4,1) both}
 @keyframes jump{0%{transform:translateY(-300px) scale(.1) rotate(-10deg);opacity:0}15%{opacity:1}55%{transform:translateY(34px) scale(1.1) rotate(3deg)}75%{transform:translateY(-12px) scale(.98) rotate(-1deg)}100%{transform:none;opacity:1}}
+.panel:not(.active) *, .panel:not(.active)::before, .panel:not(.active) *::before, .panel:not(.active) *::after{animation-play-state:paused!important}
+body:not(.card-open) .aurora *{animation-play-state:paused!important}
+@media (max-width:700px),(pointer:coarse){
+ .glass,.letter,.cap,.close{-webkit-backdrop-filter:none;backdrop-filter:none}
+ .orb{filter:blur(18px);animation:none}
+ .fg,.drop,.spk,.blob,.arch img,.glass::before,.scene::before{animation:none}
+ .p1 h1{animation:none;background:none;color:var(--gold)}
+ .p4::before{content:none}
+}
 </style></head>
 <body>
 <div class="aurora" id="aurora"><svg width="0" height="0" style="position:absolute"><symbol id="gift" viewBox="0 0 100 100"><g class="gs"><rect x="14" y="48" width="72" height="44" rx="5" fill="currentColor"/><rect x="45" y="48" width="10" height="44" fill="#f2b01e"/><rect x="8" y="32" width="84" height="18" rx="5" fill="currentColor"/><rect x="45" y="32" width="10" height="18" fill="#f2b01e"/><path d="M50 32C28 6 10 24 50 32zM50 32C72 6 90 24 50 32z" fill="#f2b01e"/></g></symbol></svg><i class="orb" style="--c:#f2b01e;--k:-0.1;left:-15%;top:-10%;width:70vmax;height:70vmax;animation-delay:0s"></i><i class="orb" style="--c:#e0405f;--k:-0.18;right:-20%;top:25%;width:60vmax;height:60vmax;animation-delay:-6s"></i><i class="orb" style="--c:#1f9a5a;--k:-0.06;left:10%;bottom:-25%;width:75vmax;height:75vmax;animation-delay:-3s"></i><i class="orb" style="--c:#f08aa0;--k:-0.14;right:5%;top:-15%;width:45vmax;height:45vmax;animation-delay:-9s"></i><svg class="fg" style="left:6%;top:72%;--s:70px;--gc:#e0405f;--k:-0.15;animation-delay:-0.0s" viewBox="0 0 100 100"><use href="#gift"/></svg><svg class="fg" style="left:84%;top:14%;--s:56px;--gc:#1f9a5a;--k:-0.2;animation-delay:-1.3s" viewBox="0 0 100 100"><use href="#gift"/></svg><svg class="fg" style="left:86%;top:68%;--s:84px;--gc:#c8102e;--k:-0.12;animation-delay:-2.6s" viewBox="0 0 100 100"><use href="#gift"/></svg><svg class="fg" style="left:10%;top:14%;--s:48px;--gc:#f08aa0;--k:-0.25;animation-delay:-3.9000000000000004s" viewBox="0 0 100 100"><use href="#gift"/></svg><svg class="fg" style="left:46%;top:88%;--s:52px;--gc:#e0405f;--k:-0.18;animation-delay:-5.2s" viewBox="0 0 100 100"><use href="#gift"/></svg><div id="drops"></div></div>
@@ -280,11 +289,11 @@ for(var i=0;i<(n||26);i++){var p=document.createElement('i');p.className='petal'
 p.style.left=Math.random()*100+'vw';p.style.background=c[i%4];p.style.setProperty('--dx',(Math.random()*160-80)+'px');
 p.style.animationDuration=(3+Math.random()*3)+'s';p.style.animationDelay=(Math.random()*1.2)+'s';
 document.body.appendChild(p);setTimeout(function(q){q.remove()},8000,p);}}
-var io=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting)x.target.classList.add('in')})},{root:story,threshold:.35});
+var io=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting)x.target.classList.add('in','active');else x.target.classList.remove('active')})},{root:story,threshold:.35});
 document.querySelectorAll('.panel').forEach(function(p){io.observe(p)});
 story.addEventListener('scroll',function(){var m=story.scrollHeight-story.clientHeight;bar.style.width=(m>0?story.scrollTop/m*100:0)+'%'});
 document.getElementById('seal').onclick=function(){
-env.classList.add('open');hint.classList.add('gone');
+document.body.classList.add('card-open');env.classList.add('open');hint.classList.add('gone');
 setTimeout(function(){scene.classList.add('done');story.classList.add('show');story.scrollTop=0;petals();},1900);};
 var cakeStarted=false,cakeRun=0,cap=document.getElementById('cap');
 function setCap(t){cap.classList.add('swap');setTimeout(function(){cap.textContent=t;cap.classList.remove('swap')},450)}
@@ -304,14 +313,13 @@ function resetLetter(){run++;document.querySelectorAll('.letter p').forEach(func
 var again=document.getElementById('again');
 if(again)again.onclick=function(){
 story.classList.remove('show');scene.classList.remove('done');env.classList.remove('open');hint.classList.remove('gone');
-setTimeout(function(){document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('in')});p4.classList.remove('out','cut','msg');resetLetter();resetGift();resetCake();bar.style.width='0';story.scrollTop=0},1100);};
+setTimeout(function(){document.body.classList.remove('card-open');document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('in','active')});p4.classList.remove('out','cut','msg');resetLetter();resetGift();resetCake();bar.style.width='0';story.scrollTop=0},1100);};
 
 (function(){var d=document.getElementById('drops');
 for(var i=0;i<18;i++){var e=document.createElement('i');e.className='drop';var s=14+Math.random()*34;
 e.style.cssText='width:'+s+'px;height:'+(s*1.2)+'px;left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;animation-duration:'+(7+Math.random()*8)+'s;animation-delay:-'+(Math.random()*10)+'s';d.appendChild(e)}
 for(var j=0;j<28;j++){var k=document.createElement('i');k.className='spk';k.style.cssText='left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;animation-delay:-'+(Math.random()*3)+'s;animation-duration:'+(2+Math.random()*3)+'s';d.appendChild(k)}})();
-var aur=document.getElementById('aurora'),pg=document.getElementById('pg');
-story.addEventListener('scroll',function(){aur.style.setProperty('--sy',story.scrollTop)});
+var pg=document.getElementById('pg');
 function balloons(n){var c=[['#f08aa0','#c4486a'],['#f2b01e','#b9780a'],['#e0405f','#8f1126'],['#4cc38a','#1f6b3a']];
 for(var i=0;i<n;i++){var b=document.createElement('div'),q=c[i%4];b.className='balloon';
 b.style.cssText='left:'+(5+Math.random()*88)+'vw;--bc:'+q[0]+';--bd:'+q[1]+';--sx:'+(Math.random()*80-40)+'px;animation-duration:'+(6+Math.random()*4)+'s;animation-delay:'+(Math.random()*1.5)+'s';
